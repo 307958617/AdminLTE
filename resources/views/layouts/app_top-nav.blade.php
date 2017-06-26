@@ -24,7 +24,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="hold-transition skin-red layout-top-nav">
+<body class="hold-transition skin-blue layout-top-nav">
 <!-- Site wrapper -->
 <div class="wrapper" id="app">
     <header class="main-header">

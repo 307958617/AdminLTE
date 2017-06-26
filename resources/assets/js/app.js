@@ -18,6 +18,7 @@ window.Vue = require('vue');
  */
 
 Vue.component('example', require('./components/Example.vue'));
+Vue.component('edit_profile', require('./components/profiles/Edit_Profile.vue'));
 
 const app = new Vue({
     el: '#app'

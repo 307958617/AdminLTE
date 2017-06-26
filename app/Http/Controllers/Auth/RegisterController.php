@@ -68,13 +68,17 @@ class RegisterController extends Controller
         elseif($data['gender'] == 'F'):
             $avatar = 'female.jpg';
         endif;
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'gender' => $data['gender'],
             'avatar' => $avatar,
-            'slug' => str_slug($data['name']),
+            'slug' => 's_'.($data['name']),
         ]);
+        $user->profile()->create([
+            'user_id'=> $user->id
+        ]);
+        return $user;
     }
 }
