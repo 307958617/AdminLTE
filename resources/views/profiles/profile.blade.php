@@ -8,7 +8,9 @@
                 <!-- Add the bg color to the header using any of the bg-* classes -->
                 <div class="widget-user-header bg-aqua-active">
                     <h3 class="widget-user-username">{{ $user->name }}</h3>
-                    <h5 class="widget-user-desc">{{ $user->profile->position ? $user->profile->position : '职位不详' }}</h5>
+                    <h5 class="widget-user-desc">
+                        {{ $user->profile->position ? $user->profile->position : '' }}
+                    </h5>
                 </div>
                 <div class="widget-user-image">
                     <img class="img-circle" src="{{ asset('storage/images/avatars').'/'.$user->avatar }}" style="height: 90px" alt="User Avatar">
@@ -38,7 +40,7 @@
                     <!-- /.box-tools -->
                 </div>
                 <!-- /.box-header -->
-                <div class="box-body">
+                <div class="box-body" id="box-body-about">
                     {{ $user->profile->about ? $user->profile->about : '没有内容！' }}
                 </div>
                 <!-- /.box-body -->

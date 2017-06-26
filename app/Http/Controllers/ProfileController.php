@@ -12,4 +12,13 @@ class ProfileController extends Controller
         $user = User::where('slug',$slug)->first();
         return view('profiles.profile',compact('user'));
     }
+
+    public function update($slug,Request $request)
+    {
+        $project = User::where('slug',$slug)->first()->profile;
+        $project->about = $request->about;
+        $project->position = $request->position;
+        $project->save();
+        return $project;
+    }
 }

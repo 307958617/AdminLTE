@@ -1776,8 +1776,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['user', 'position', 'about'],
-    data: function data() {
-        return {};
+    methods: {
+        updateProfile: function updateProfile() {
+            var _this = this;
+
+            axios.patch('/profile/s_' + this.user + '/update', { position: $('#position').val(), about: $('#about').val(), avatar: $('#avatar').val() }).then(function (response) {
+                $('#' + _this.user).modal('hide');
+                $('h5.widget-user-desc').html(response.data.position);
+                $('#box-body-about').html(response.data.about);
+            });
+        }
     }
 });
 
@@ -33271,7 +33279,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "id": this.user,
       "tabindex": "-1",
       "role": "dialog",
-      "aria-labelledby": "myModalLabel"
+      "aria-labelledby": this.user + 'Label'
     }
   }, [_c('div', {
     staticClass: "modal-dialog",
@@ -33285,7 +33293,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._m(0), _vm._v(" "), _c('h4', {
     staticClass: "modal-title",
     attrs: {
-      "id": "myModalLabel"
+      "id": this.user + 'Label'
     }
   }, [_vm._v("Edit " + _vm._s(this.user) + "'s profile")])]), _vm._v(" "), _c('div', {
     staticClass: "modal-body"
@@ -33293,6 +33301,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "role": "form",
       "enctype": "multipart/form-data"
+    },
+    on: {
+      "submit": function($event) {
+        $event.preventDefault();
+        _vm.updateProfile($event)
+      }
     }
   }, [_c('div', {
     staticClass: "form-group"
