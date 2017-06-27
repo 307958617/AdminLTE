@@ -23,15 +23,15 @@
                                 <textarea type="text" class="form-control" id="about" placeholder="请输入自我介绍...">{{ this.about }}</textarea>
                             </div>
                             <div class="form-group">
-                                <label class="pull-left" for="avatar">头像:</label>
-                                <input type="file" id="avatar">
+                                <div id="croppie"></div>
+                                <div class="btn btn-block btn-success">是否上传头像</div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">放弃</button>
                                 <button type="submit" class="btn btn-primary">确认更改</button>
                             </div>
                         </form>
-                      </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,13 +40,35 @@
 
 <script>
     export default {
-        props:['user','position','about'],
+        props:['user','position','about','imgUrl'],
+        data() {
+            return {
+                croppie: null,
+                image: null
+            }
+        },
+        mounted() {
+            this.image = this.imgUrl;//传递进来图片当前的url地址
+            this.setUpCroppie();
+        },
         methods: {
             updateProfile() {
-                axios.patch('/profile/s_'+ this.user +'/update',{position:$('#position').val(),about:$('#about').val(),avatar:$('#avatar').val()}).then(response => {
+                axios.patch('/profile/s_'+ this.user +'/update',{position:$('#position').val(),about:$('#about').val(),avatar:$('#avatar')}).then(response => {
                     $('#'+this.user).modal('hide');
                     $('h5.widget-user-desc').html(response.data.position);
                     $('#box-body-about').html(response.data.about);
+                })
+            },
+            setUpCroppie() {
+                let el = document.getElementById('croppie');
+                this.croppie = new Croppie(el, {
+                    viewport: { width: 200, height: 200 },
+                    boundary: { width: 300, height: 300 },
+                    showZoomer: true,
+                    enableOrientation: true
+                });
+                this.croppie.bind({
+                    url: this.image
                 })
             }
         }

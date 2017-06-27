@@ -1,5 +1,8 @@
 @extends('layouts.app_top-nav')
-
+@section('css')
+    <link href="https://cdn.bootcss.com/croppie/2.4.1/croppie.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/croppie/2.4.1/croppie.min.js"></script>
+@endsection
 @section('content')
     <div class="row">
         <div class="col-md-4">
@@ -19,7 +22,7 @@
                     <div class="row text-center">
                         <br>
                         @if(Auth::user()->id == $user->id)
-                            <edit_profile user="{{ Auth::user()->name }}" position="{{ Auth::user()->profile->position }}" about="{{ Auth::user()->profile->about }}"></edit_profile>
+                            <edit_profile img-url="{{ asset('storage/images/avatars').'/'.Auth::user()->avatar }}" user="{{ Auth::user()->name }}" position="{{ Auth::user()->profile->position }}" about="{{ Auth::user()->profile->about }}"></edit_profile>
                         @endif
                     </div>
                     <!-- /.row -->
