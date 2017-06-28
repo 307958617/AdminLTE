@@ -23,8 +23,25 @@
                                 <textarea type="text" class="form-control" id="about" placeholder="请输入自我介绍...">{{ this.about }}</textarea>
                             </div>
                             <div class="form-group">
-                                <div id="croppie"></div>
-                                <div class="btn btn-block btn-success">是否上传头像</div>
+                                <div id="croppie" v-show="modalVisable"></div>
+                                <div id="upload-wrapper">
+                                    <div class="btn btn-primary btn-block" v-show="modalVisable == false" @click="modalVisable = true">
+                                        <i class="fa fa-camera"></i> Upload Image
+                                    </div>
+
+                                    <div class="Model" v-if="modalVisable">
+                                        <div class="input-file">
+                                            <input type="file" id="upload-image" style="opacity: 0;position: fixed;margin-left: 35%" @change="setFileUploader"><h4 id="fileName">点击这里选择上传文件</h4>
+                                        </div>
+
+                                        <div class="btn btn-primary btn-sm" @click="upLoadFile">
+                                            <i class="fa fa-upload"></i> Upload
+                                        </div>
+                                        <div class="btn btn-danger btn-sm" @click="modalVisable = false">
+                                            <i class="fa fa-times"></i> Cancel
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">放弃</button>
@@ -43,11 +60,17 @@
         props:['user','position','about','imgUrl'],
         data() {
             return {
+                modalVisable: false,
                 croppie: null,
                 image: null
             }
         },
         mounted() {
+            this.$on('imageUploaded',function (imageData) {
+                this.image = imageData;
+                this.croppie.destroy();
+                this.setUpCroppie(imageData);
+            });
             this.image = this.imgUrl;//传递进来图片当前的url地址
             this.setUpCroppie();
         },
@@ -62,13 +85,43 @@
             setUpCroppie() {
                 let el = document.getElementById('croppie');
                 this.croppie = new Croppie(el, {
-                    viewport: { width: 200, height: 200 },
+                    viewport: { width: 200, height: 200, type: 'circle' },
                     boundary: { width: 300, height: 300 },
                     showZoomer: true,
                     enableOrientation: true
                 });
                 this.croppie.bind({
                     url: this.image
+                })
+            },
+            setFileUploader(e) {
+                let files = e.target.files || e.dataTransfer.files;
+                if (!files){
+                    return
+                }
+                this.createImage(files[0]);
+                $('#fileName').html(files[0].name);
+            },
+            createImage(file) {
+                var image = new Image();
+                var reader = new FileReader();
+                var vm = this;
+
+                reader.onload = (e) => {
+                    vm.image = e.target.result;
+                    vm.$emit('imageUploaded',e.target.result);
+                };
+
+                reader.readAsDataURL(file)
+            },
+            upLoadFile() {
+                this.croppie.result({
+                    type: 'canvas',
+                    size: 'viewport'
+                }).then(response => {
+                    this.axios.post('/profile/s_'+ this.user +'/update',{img: this.image}).then(response => {
+                        this.modalVisable = false
+                    })
                 })
             }
         }
