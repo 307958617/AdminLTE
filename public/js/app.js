@@ -1814,7 +1814,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         updateProfile: function updateProfile() {
             var _this = this;
 
-            axios.patch('/profile/s_' + this.user + '/update', { position: $('#position').val(), about: $('#about').val(), avatar: $('#avatar') }).then(function (response) {
+            axios.post('/profile/s_' + this.user + '/update', { position: $('#position').val(), about: $('#about').val(), avatar: $('#avatar') }).then(function (response) {
                 $('#' + _this.user).modal('hide');
                 $('h5.widget-user-desc').html(response.data.position);
                 $('#box-body-about').html(response.data.about);
@@ -1823,7 +1823,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         setUpCroppie: function setUpCroppie() {
             var el = document.getElementById('croppie');
             this.croppie = new Croppie(el, {
-                viewport: { width: 200, height: 200, type: 'circle' },
+                viewport: { width: 250, height: 250, type: 'circle' },
                 boundary: { width: 300, height: 300 },
                 showZoomer: true,
                 enableOrientation: true
@@ -1859,7 +1859,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 type: 'canvas',
                 size: 'viewport'
             }).then(function (response) {
-                _this2.axios.post('/profile/s_' + _this2.user + '/update', { img: _this2.image }).then(function (response) {
+                _this2.image = response;
+                axios.post('/profile/s_' + _this2.user + '/update', { img: _this2.image }).then(function (response) {
                     _this2.modalVisable = false;
                 });
             });

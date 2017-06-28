@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\URL;
 
 class User extends Authenticatable
 {
@@ -30,5 +31,12 @@ class User extends Authenticatable
     public function profile()
     {
         return $this->hasOne('App\Profile');
+    }
+
+    public function removeAvatar()
+    {
+        if($this->avatar){
+            unlink(storage_path('app/public/images/avatars/').$this->avatar);
+        }
     }
 }

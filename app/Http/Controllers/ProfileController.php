@@ -16,22 +16,27 @@ class ProfileController extends Controller
 
     public function update($slug,Request $request)
     {
-        $data = $request->input('img');
-        list($type,$data) = explode(';',$data);
-        list(, $data) = explode(',', $data);
-        $data = base64_decode($data);
-        $imageName = time().'.png';
-        $path = public_path('images/avatars/');
-        if(!file_exists($path)){
-            mkdir($path,0755,true);
+        $user = User::where('slug',$slug)->first();
+
+        if($request->has('img')){
+            $data = $request->input('img');
+            list($type,$data) = explode(';',$data);
+            list(, $data) = explode(',', $data);
+            $data = base64_decode($data);
+            $imageName = time().'.png';
+            $path = storage_path('app/public/images/avatars/');
+            if(!file_exists($path)){
+                mkdir($path,0755,true);
+            }
+            file_put_contents($path.$imageName,$data);
+            $user->removeAvatar();
+            $user->avatar = $imageName;
+            $user->save();
         }
-        file_put_contents($path.$imageName,$data);
-
-
-//        $project = User::where('slug',$slug)->first()->profile;
-//        $project->about = $request->about;
-//        $project->position = $request->position;
-//        $project->save();
-//        return $project;
+        $project = $user->profile;
+        $project->about = $request->about;
+        $project->position = $request->position;
+        $project->save();
+        return $project;
     }
 }

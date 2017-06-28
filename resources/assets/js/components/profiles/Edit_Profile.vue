@@ -76,7 +76,7 @@
         },
         methods: {
             updateProfile() {
-                axios.patch('/profile/s_'+ this.user +'/update',{position:$('#position').val(),about:$('#about').val(),avatar:$('#avatar')}).then(response => {
+                axios.post('/profile/s_'+ this.user +'/update',{position:$('#position').val(),about:$('#about').val(),avatar:$('#avatar')}).then(response => {
                     $('#'+this.user).modal('hide');
                     $('h5.widget-user-desc').html(response.data.position);
                     $('#box-body-about').html(response.data.about);
@@ -85,7 +85,7 @@
             setUpCroppie() {
                 let el = document.getElementById('croppie');
                 this.croppie = new Croppie(el, {
-                    viewport: { width: 200, height: 200, type: 'circle' },
+                    viewport: { width: 250, height: 250, type: 'circle' },
                     boundary: { width: 300, height: 300 },
                     showZoomer: true,
                     enableOrientation: true
@@ -119,7 +119,8 @@
                     type: 'canvas',
                     size: 'viewport'
                 }).then(response => {
-                    this.axios.post('/profile/s_'+ this.user +'/update',{img: this.image}).then(response => {
+                    this.image = response;
+                    axios.post('/profile/s_'+ this.user +'/update',{img: this.image}).then(response => {
                         this.modalVisable = false
                     })
                 })
